@@ -4,7 +4,6 @@ from os import path
 from typing import Any, Dict, Optional
 from uuid import uuid4
 
-DEFAULT_API_URL: str = "https://asciinema.org"
 DEFAULT_RECORD_ENV: str = "SHELL,TERM"
 
 
@@ -96,7 +95,7 @@ class Config:
     def api_url(self) -> str:
         return self.env.get(
             "ASCIINEMA_API_URL",
-            self.config.get("api", "url", fallback=DEFAULT_API_URL),
+            self.config.get("api", "url", fallback=""),
         )
 
     @property
