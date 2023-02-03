@@ -101,11 +101,22 @@ class Player:  # pylint: disable=too-few-public-methods
         pause_key = key_bindings.get("pause")
         step_key = key_bindings.get("step")
 
-        events = asciicast.events()
-        events = ev.to_relative_time(events)
-        events = ev.cap_relative_time(events, idle_time_limit)
-        events = ev.to_absolute_time(events)
-        events = ev.adjust_speed(events, speed)
+        _events = asciicast.events()
+
+        prev_time = 0
+        abs_time = 0
+        events = []
+        for event in _events:
+            _time, _type, _data = event
+            if _type == 'sleep':
+                abs_time += _time
+                continue
+            delta_time = _time - prev_time
+            prev_time = _time
+            delta_time = min(delta_time, idle_time_limit)
+            abs_time = abs_time + delta_time
+                
+            events.append((abs_time / speed, _type, _data))
 
         output.start(asciicast.v2_header)
 
